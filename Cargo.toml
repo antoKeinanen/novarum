@@ -8,5 +8,6 @@ authors = ["antoKeinanen"]
 
 [dependencies]
 dialoguer = "0.10.2"
+glob = "0.3.1"
 platform-dirs = "0.3.0"
 run_shell = "0.1.13"

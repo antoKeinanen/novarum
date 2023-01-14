@@ -3,14 +3,19 @@ shell echo "this is an example of shell command"
 
 # You can change working directory using 'chdir'.
 # Absolute paths also work. Eg. /usr/bin
-chdir ./configs
+shell mkdir example
+chdir ./example
 shell pwd
 chdir ..
 shell pwd
 
 
-# Print messages to the stdout with 'message'.
-message Select option! 
+# Print messages to the stdout with 'print'.
+print Select option
+
+# Use 'message' to set the message for next select or multiselect
+# Note don't use trailing :
+message select from the options
 
 # 'select' creates selection interface
 # The user can use arrow keys to navigate between options and select one with enter.
@@ -20,6 +25,8 @@ select
   - option2
   # 'end' ends the selection options list 
 end
+
+# If no message if specified between selections message will default to "Select".
 
 # 'multiselect' works just like 'select' except the user can select multiple options.
 # The user can use arrow keys to navigate between options, space to select or unselect options, and continue with enter.
