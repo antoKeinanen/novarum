@@ -21,6 +21,15 @@ Novarum is open source project setup tool. It has easy to use user interface. No
 4. Validate that the app is installed correctly by running `novarum` and completing setup steps.
 5. (Optional) Install Novarum language spport extension.
 
+# Updating
+## Most Unix based systems
+1. Download the latest version of novarum from repeases page.
+2. Rename the binary to `novarum`
+3. Delete the old binary from `/usr/bin`
+3. Move the new binary to `/usr/bin`
+4. Validate that the app is installed correctly by running `novarum` and completing setup steps.
+
+
 # Building from source
 1. To build from source make sure you have cargo installed and updated. It should be at least of version 1.66.0.
 2. Clone the repository with `git clone https://github.com/antoKeinanen/novarum.git`
