@@ -1,0 +1,45 @@
+# You can run shell commands with shell keyword.
+shell echo "this is an example of shell command"
+
+# You can change working directory using 'chdir'.
+# Absolute paths also work. Eg. /usr/bin
+chdir ./configs
+shell pwd
+chdir ..
+shell pwd
+
+
+# Print messages to the stdout with 'message'.
+message Select option! 
+
+# 'select' creates selection interface
+# The user can use arrow keys to navigate between options and select one with enter.
+select
+  # list the options you want to include in your selection with '-'
+  - option1
+  - option2
+  # 'end' ends the selection options list 
+end
+
+# 'multiselect' works just like 'select' except the user can select multiple options.
+# The user can use arrow keys to navigate between options, space to select or unselect options, and continue with enter.
+# Note that with multiselect you can also choose to select none of the options.
+multiselect
+  - multiOption1
+  - multiOption2
+end
+
+# 'if' works like any other if statement
+# The most notable feature is that it can only refer to last select and multiselect.
+# So every time you use select or multiselect it overwrites last selections.
+if option1
+  shell echo "1"
+end
+
+if multiOption2
+  shell echo "2"
+end
+
+
+
+
