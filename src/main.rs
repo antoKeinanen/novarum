@@ -1,8 +1,8 @@
 use std::{
     env,
-    fs::{create_dir, create_dir_all, File},
+    fs::{create_dir_all, File},
     io::{BufRead, BufReader, Write},
-    path::{self, Path},
+    path::{Path},
 };
 
 use dialoguer::{theme::SimpleTheme, Confirm, MultiSelect, Select};
