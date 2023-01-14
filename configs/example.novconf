@@ -3,7 +3,7 @@ shell echo "this is an example of shell command"
 
 # You can change working directory using 'chdir'.
 # Absolute paths also work. Eg. /usr/bin
-shell mkdir example
+shell mkdir -p example
 chdir ./example
 shell pwd
 chdir ..
