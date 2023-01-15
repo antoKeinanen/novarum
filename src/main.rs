@@ -112,7 +112,7 @@ fn main() {
 
         match first_token {
             "-" => {
-                if mode == Mode::Select || mode == Mode::SearchSelect  {
+                if mode == Mode::Select || mode == Mode::SearchSelect {
                     select_options.push(rest_of_line.to_owned())
                 } else if mode == Mode::MultiSelect {
                     multiselect_options.push(rest_of_line.to_owned())
