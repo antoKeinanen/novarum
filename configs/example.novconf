@@ -18,7 +18,7 @@ message select from the options
 
 # 'select' creates selection interface
 # The user can use arrow keys to navigate between options and select one with enter.
-select
+select Selection
   # list the options you want to include in your selection with '-'
   - option1
   - option2
@@ -29,7 +29,7 @@ message Select one (type to search)
 
 # 'searchselect' creates selection interface that can be searched
 # The user can use arrow keys to navigate between options, keyboard to write a search, and select one with enter.
-searchselect
+searchselect searchSelection
   - option1
   - option2
   - option3
@@ -43,7 +43,7 @@ end
 # 'multiselect' works just like 'select' except the user can select multiple options.
 # The user can use arrow keys to navigate between options, space to select or unselect options, and continue with enter.
 # Note that with multiselect you can also choose to select none of the options.
-multiselect
+multiselect multiSelection
   - multiOption1
   - multiOption2
 end
@@ -51,11 +51,11 @@ end
 # 'if' works like any other if statement
 # The most notable feature is that it can only refer to last select and multiselect.
 # So every time you use select or multiselect it overwrites last selections.
-if option1
+if Selection option1
   shell echo "1"
 end
 
-if multiOption2
+if multiSelection multiOption2
   shell echo "2"
 end
 

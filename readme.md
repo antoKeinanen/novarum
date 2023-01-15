@@ -91,17 +91,17 @@ print example message!
 ```
 
 ## Select
-`select` creates selection interface. Users can use arrow keys to navigate between the options and enter to select one. Select supports only single selection if you want the user to select multiple options refer to `multiselect`. Select keyword is always followed by list of options followed by `end` keyword. Everything should be on their own lines. Before each option there should be `-` followed by space. By default the message of the selection is 'Select' to change this refer to `message` keyword. Note that using 2 select blocks after each other will prevent `if` from reading the answer from the first one as `select` overwrites last answer using.
+`select` creates selection interface. Users can use arrow keys to navigate between the options and enter to select one. Select supports only single selection if you want the user to select multiple options refer to `multiselect`. Select keyword is always followed by the name of the selection and that is followed by list of options followed by `end` keyword. Selection's name shouldn't contain any spaces. Everything should be on their own lines. Before each option there should be `-` followed by space. By default the message of the selection is 'Select' to change this refer to `message` keyword.
 
 ```
-select
+select [name]
   [list of options]
 end
 ```
 
 ### Examples
 ```
-select
+select selectionName
   - option 1
   - option 2
   - option 3
@@ -112,14 +112,14 @@ end
 `searchselect` works exactly like select, except the users can search the options. Refer to `select` for more information.
 
 ```
-searchselect
+searchselect [name]
   [list of options]
 end
 ```
 
 ### Examples
 ```
-searchselect
+searchselect selectionName
   - option 1
   - option 2
   - option 3
@@ -127,17 +127,16 @@ end
 ```
 
 ## Multiselect
-`multiselect` creates selection interface, just like select except they can choose multiple options. Users can use arrow keys to navigate between the options, space to select and deselect options, and enter continue. Multiselect supports multiple option selections if you want to restrict the user's selection options to only 1 refer to `select`. Multiselect keyword is always followed by list of options followed by `end` keyword. Everything should be on their own lines. Before each option there should be `-` followed by space. By default the message of the selection is 'Select' to change this refer to `message` keyword. Note that using 2 `multiselect` blocks after each other will prevent `if` from reading the answer from the first one as `multiselect` overwrites last answer using.
-
+`multiselect` creates selection interface, just like select would except users can choose multiple options from the list. Users can use arrow keys to navigate between the options, space to select and deselect options, and enter continue. Multiselect supports multiple option selections if you want to restrict the amount of user's selectios to only 1 please refer to `select`. Multiselect keyword is always followed by the name of the selection and list of options followed by `end` keyword. Everything should be on their own lines. The name shouldn't contain any spaces. Before each option there should be `-` followed by space. By default the message of the selection is 'Select' to change this refer to `message` keyword.
 ```
-multiselect
+multiselect [name]
   [list of options]
 end
 ```
 
 ### Examples
 ```
-multiselect
+multiselect selectionName
   - option 1
   - option 2
   - option 3
@@ -145,7 +144,7 @@ end
 ```
 
 ## Message
-`message` keyword is used to set the message of `multiselect` or `select`. Note that there should not be trailing spaces or colon (:).
+`message` keyword is used to set the message of `multiselect`, `searchselect` or `select`. Note that there should not be trailing spaces or colon (:).
 
 ```
 message [message]
@@ -157,48 +156,37 @@ message Select one or more
 ```
 
 ## If
-With `if` keyword you can check wether or not some option was selected. `if` is always followed by the commands to be executed if condition is true followed by `end` keyword. Note that answers from `select` and `multiselect` are overwritten every time you use them. The `if` block does not support conditions and can just be used to check if in the last `select` or `multiselect` specified option was selected. **`if` does not support nesting!**
+With `if` keyword you can check wether or not some option was selected. `if` is always followed by the name of the selection you want check and then the option you want to check. If is always terminated with end block. **`if` does not support nesting!**
 
 ```
-if [option]
+if [name] [option]
   [commands]
 end
 ```
 
 ### Examples
-The code below will not work!!!!
+
 ```
-select
-  - option 1
-  - option 2
-  - option 3
-end
-select
-  - option 4
-  - option 5
-  - option 6
-end
-if option 1
-  shell echo "will never run"
-end
-```
-This is the correct way to do it:
-```
-select
+select selection1
   - option 1
   - option 2
   - option 3
 end
 
-if option 1
-  shell echo "will run"
+select selection2
+  - option 1
+  - option 2
+  - option 3
 end
 
-select
-  - option 4
-  - option 5
-  - option 6
+if selection1 option 1
+  print "option 1 was selected in selection1"
 end
+
+if selection2 option 1
+  print "option 1 was selected in selection1"
+end
+
 ```
 
 ## End
@@ -206,14 +194,14 @@ end
 
 ### Examples
 ```
-select
+select selection1
   - option 1
   - option 2
   - option 3
 end
 ```
 ```
-multiselect
+multiselect multiselection1
   - option 1
   - option 2
   - option 3
@@ -221,8 +209,8 @@ end
 ```
 
 ```
-if option 1
-  shell echo "option 1 was selected"
+if selection1 option 1
+  print "option 1 was selected"
 end
 ```
 
