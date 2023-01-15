@@ -124,6 +124,7 @@ searchselect
   - option 2
   - option 3
 end
+```
 
 ## Multiselect
 `multiselect` creates selection interface, just like select except they can choose multiple options. Users can use arrow keys to navigate between the options, space to select and deselect options, and enter continue. Multiselect supports multiple option selections if you want to restrict the user's selection options to only 1 refer to `select`. Multiselect keyword is always followed by list of options followed by `end` keyword. Everything should be on their own lines. Before each option there should be `-` followed by space. By default the message of the selection is 'Select' to change this refer to `message` keyword. Note that using 2 `multiselect` blocks after each other will prevent `if` from reading the answer from the first one as `multiselect` overwrites last answer using.
@@ -156,7 +157,7 @@ message Select one or more
 ```
 
 ## If
-With `if` keyword you can check wether or not some option was selected. `if` is always followed by the commands to be executed if condition is true followed by `end` keyword. Note that answers from `select` and `multiselect` are overwritten every time you use them. The `if` block does not support conditions and can just be used to check if in the last `select` or `multiselect` specified option was selected.
+With `if` keyword you can check wether or not some option was selected. `if` is always followed by the commands to be executed if condition is true followed by `end` keyword. Note that answers from `select` and `multiselect` are overwritten every time you use them. The `if` block does not support conditions and can just be used to check if in the last `select` or `multiselect` specified option was selected. **`if` does not support nesting!**
 
 ```
 if [option]
