@@ -1,14 +1,17 @@
 use std::{
     env,
-    fs::{create_dir_all, File},
-    io::{BufRead, BufReader, Write},
+    fs::{File},
+    io::{BufRead, BufReader},
     path::Path,
 };
 
-use dialoguer::{theme::SimpleTheme, Confirm, FuzzySelect, MultiSelect, Select};
+use dialoguer::{theme::SimpleTheme, FuzzySelect, MultiSelect, Select};
 
 use platform_dirs::AppDirs;
 use run_shell::cmd;
+use setup::{generate_files, select_config};
+
+mod setup;
 
 #[derive(PartialEq)]
 enum Mode {
@@ -20,66 +23,14 @@ enum Mode {
 }
 
 fn main() {
-    let example_bytes = include_bytes!("../configs/example.novconf");
-
     let app_dirs = AppDirs::new(Some("novarum"), false).unwrap();
-
-    if !app_dirs.config_dir.exists() {
-        println!("It looks like you are missing config directory at:");
-        println!("{:?}", &app_dirs.config_dir);
-        let confirmed = Confirm::new()
-            .with_prompt("Would you like to create one now?")
-            .interact()
-            .unwrap();
-
-        if confirmed {
-            println!("Creating config folder...");
-            create_dir_all(&app_dirs.config_dir).expect("Failed to create config folder!");
-            println!("Writing example config to config folder...");
-
-            let mut file = File::create(app_dirs.config_dir.join("example.novconf"))
-                .expect("Failed to create example config file!");
-            file.write(example_bytes)
-                .expect("Failed to write example config!");
-        } else {
-            println!("Exiting...");
-            return;
-        }
-    }
-
-    let mut configs: Vec<String> = vec![];
-    let mut config_paths: Vec<String> = vec![];
+    generate_files(&app_dirs);
 
     let file;
     if cfg!(debug_assertions) {
         file = File::open("configs/example.novconf").unwrap();
     } else {
-        for entry in glob::glob(app_dirs.config_dir.join("*.novconf").to_str().unwrap())
-            .expect("Failed to read glob pattern!")
-        {
-            match entry {
-                Ok(path) => {
-                    configs.push(
-                        path.as_path()
-                            .file_stem()
-                            .unwrap()
-                            .to_string_lossy()
-                            .to_string(),
-                    );
-                    config_paths.push(path.to_str().unwrap().to_string());
-                }
-                Err(e) => println!("{:?}", e),
-            }
-        }
-
-        let selected_config = FuzzySelect::with_theme(&SimpleTheme)
-            .with_prompt("Select config to be used (type to search):")
-            .items(&configs)
-            .default(0)
-            .interact()
-            .unwrap();
-
-        file = File::open(&config_paths[selected_config]).unwrap();
+        file = select_config(&app_dirs);
     }
 
     let reader = BufReader::new(file);
