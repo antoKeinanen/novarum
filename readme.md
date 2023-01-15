@@ -91,7 +91,7 @@ print example message!
 ```
 
 ## Select
-`Select` creates selection interface. Users can use arrow keys to navigate between the options and enter to select one. Select supports only single selection if you want the user to select multiple options refer to `multiselect`. Select keyword is always followed by list of options followed by `end` keyword. Everything should be on their own lines. Before each option there should be `-` followed by space. By default the message of the selection is 'Select' to change this refer to `message` keyword. Note that using 2 select blocks after each other will prevent `if` from reading the answer from the first one as `select` overwrites last answer using.
+`select` creates selection interface. Users can use arrow keys to navigate between the options and enter to select one. Select supports only single selection if you want the user to select multiple options refer to `multiselect`. Select keyword is always followed by list of options followed by `end` keyword. Everything should be on their own lines. Before each option there should be `-` followed by space. By default the message of the selection is 'Select' to change this refer to `message` keyword. Note that using 2 select blocks after each other will prevent `if` from reading the answer from the first one as `select` overwrites last answer using.
 
 ```
 select
@@ -107,6 +107,23 @@ select
   - option 3
 end
 ```
+
+## Searchselect
+`searchselect` works exactly like select, except the users can search the options. Refer to `select` for more information.
+
+```
+searchselect
+  [list of options]
+end
+```
+
+### Examples
+```
+searchselect
+  - option 1
+  - option 2
+  - option 3
+end
 
 ## Multiselect
 `multiselect` creates selection interface, just like select except they can choose multiple options. Users can use arrow keys to navigate between the options, space to select and deselect options, and enter continue. Multiselect supports multiple option selections if you want to restrict the user's selection options to only 1 refer to `select`. Multiselect keyword is always followed by list of options followed by `end` keyword. Everything should be on their own lines. Before each option there should be `-` followed by space. By default the message of the selection is 'Select' to change this refer to `message` keyword. Note that using 2 `multiselect` blocks after each other will prevent `if` from reading the answer from the first one as `multiselect` overwrites last answer using.

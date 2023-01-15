@@ -9,9 +9,8 @@ shell pwd
 chdir ..
 shell pwd
 
-
 # Print messages to the stdout with 'print'.
-print Select option
+print this is a print message
 
 # Use 'message' to set the message for next select or multiselect
 # Note don't use trailing :
@@ -23,6 +22,19 @@ select
   # list the options you want to include in your selection with '-'
   - option1
   - option2
+  # 'end' ends the selection options list 
+end
+
+message Select one (type to search)
+
+# 'searchselect' creates selection interface that can be searched
+# The user can use arrow keys to navigate between options, keyboard to write a search, and select one with enter.
+searchselect
+  - option1
+  - option2
+  - option3
+  - option4
+  - option5
   # 'end' ends the selection options list 
 end
 

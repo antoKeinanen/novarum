@@ -2,10 +2,10 @@ use std::{
     env,
     fs::{create_dir_all, File},
     io::{BufRead, BufReader, Write},
-    path::{Path},
+    path::Path,
 };
 
-use dialoguer::{theme::SimpleTheme, Confirm, MultiSelect, Select};
+use dialoguer::{theme::SimpleTheme, Confirm, FuzzySelect, MultiSelect, Select};
 
 use platform_dirs::AppDirs;
 use run_shell::cmd;
@@ -15,6 +15,7 @@ enum Mode {
     Basic,
     Select,
     MultiSelect,
+    SearchSelect,
     If(bool),
 }
 
@@ -49,33 +50,38 @@ fn main() {
     let mut configs: Vec<String> = vec![];
     let mut config_paths: Vec<String> = vec![];
 
-    for entry in glob::glob(app_dirs.config_dir.join("*.novconf").to_str().unwrap())
-        .expect("Failed to read glob pattern!")
-    {
-        match entry {
-            Ok(path) => {
-                configs.push(
-                    path.as_path()
-                        .file_stem()
-                        .unwrap()
-                        .to_string_lossy()
-                        .to_string(),
-                );
-                config_paths.push(path.to_str().unwrap().to_string());
+    let file;
+    if cfg!(debug_assertions) {
+        file = File::open("configs/example.novconf").unwrap();
+    } else {
+        for entry in glob::glob(app_dirs.config_dir.join("*.novconf").to_str().unwrap())
+            .expect("Failed to read glob pattern!")
+        {
+            match entry {
+                Ok(path) => {
+                    configs.push(
+                        path.as_path()
+                            .file_stem()
+                            .unwrap()
+                            .to_string_lossy()
+                            .to_string(),
+                    );
+                    config_paths.push(path.to_str().unwrap().to_string());
+                }
+                Err(e) => println!("{:?}", e),
             }
-            Err(e) => println!("{:?}", e),
         }
+
+        let selected_config = FuzzySelect::with_theme(&SimpleTheme)
+            .with_prompt("Select config to be used (type to search):")
+            .items(&configs)
+            .default(0)
+            .interact()
+            .unwrap();
+
+        file = File::open(&config_paths[selected_config]).unwrap();
     }
 
-    let selected_config= Select::with_theme(&SimpleTheme)
-        .with_prompt("Select config to be used")
-        .items(&configs)
-        .default(0)
-        .interact()
-        .unwrap();
-
-
-    let file = File::open(&config_paths[selected_config]).unwrap();
     let reader = BufReader::new(file);
 
     let mut select_options: Vec<String> = vec![];
@@ -106,7 +112,7 @@ fn main() {
 
         match first_token {
             "-" => {
-                if mode == Mode::Select {
+                if mode == Mode::Select || mode == Mode::SearchSelect  {
                     select_options.push(rest_of_line.to_owned())
                 } else if mode == Mode::MultiSelect {
                     multiselect_options.push(rest_of_line.to_owned())
@@ -125,14 +131,17 @@ fn main() {
             "select" => {
                 mode = Mode::Select;
             }
+            "multiselect" => {
+                mode = Mode::MultiSelect;
+            }
+            "searchselect" => {
+                mode = Mode::SearchSelect;
+            }
             "print" => {
                 println!("{}", rest_of_line);
             }
             "message" => {
                 message = rest_of_line.to_string();
-            }
-            "multiselect" => {
-                mode = Mode::MultiSelect;
             }
             "end" => {
                 match mode {
@@ -162,7 +171,20 @@ fn main() {
                         multiselect_options.clear();
                         message = String::from("Select");
                     }
+                    Mode::SearchSelect => {
+                        let selected = FuzzySelect::with_theme(&SimpleTheme)
+                            .with_prompt(&message)
+                            .items(&select_options)
+                            .default(0)
+                            .interact()
+                            .unwrap();
+
+                        last_selected = format!("{}", select_options[selected]);
+                        select_options.clear();
+                        message = String::from("Select");
+                    }
                     Mode::If(_) => {}
+
                     _ => panic!("Unexpected end token on line {}", index + 1),
                 }
                 mode = Mode::Basic;
